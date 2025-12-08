@@ -1,0 +1,76 @@
+services:
+  nginx:
+    container_name: nginx
+    build: 
+      context: .
+      dockerfile: ./requirements/nginx/Dockerfile
+    ports:
+      - 443:443
+    volumes:
+      - wordpress_data:/var/www/html
+    networks:
+      - cloudy
+    depends_on:
+      - wordpress
+    restart: unless-stopped 
+    
+  wordpress:
+    container_name: wordpress
+    build: 
+      context: .
+      dockerfile: ./requirements/wordpress/Dockerfile
+    volumes: 
+      - wordpress_data:/var/www/html
+    ports: 
+      - 9000:9000
+    expose:
+    - "9000"
+    networks:
+      - cloudy
+    depends_on:
+      - mysql
+    restart: unless-stopped
+
+  mysql:
+    container_name: mysql
+    build: 
+      context: .
+      dockerfile: ./requirements/mysql/Dockerfile
+    volumes:
+      - mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - 3306:3306
+    networks:
+      - cloudy
+    env_file:
+    - .env
+    restart: unless-stopped
+
+  grafana:
+    container_name: grafana
+    build:
+      context: .
+      dockerfile: ./requirements/bonus/grafana/Dockerfile
+      args:
+        GRAFANA_USER_NAME: "${GRAFANA_USER_NAME}"
+        GRAFANA_PWD: "${GRAFANA_PWD}"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    ports: 
+    - "3000:3000"
+    networks:
+      - cloudy
+    
+networks:
+  cloudy:
+    driver: bridge
+
+volumes:
+  wordpress_data:
+  mysql_data:
+  grafana_data:
