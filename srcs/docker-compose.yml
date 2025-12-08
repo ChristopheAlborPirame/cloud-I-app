@@ -21,6 +21,13 @@ services:
       dockerfile: ./requirements/wordpress/Dockerfile
     volumes: 
       - wordpress_data:/var/www/html
+    environment:
+      WORDPRESS_DB_HOST: mysql
+      WORDPRESS_DB_USER: ${MYSQL_USER}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+      WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
+    env_file:
+    - .env
     ports: 
       - 9000:9000
     expose:

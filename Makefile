@@ -15,6 +15,8 @@ down:
 downv:
 	docker compose -f $(COMPOSE) down -v
 
+reset: downv clean
+
 
 re:
 	docker compose -f $(COMPOSE) down
@@ -42,3 +44,4 @@ logs:
 	docker compose -f $(COMPOSE) logs mariadb
 	docker compose -f $(COMPOSE) logs nginx
 
+.PHONY: logs clean re reset down downv up test
