@@ -14,7 +14,7 @@ if [ ! -d "/var/lib/mysql/mysql" ]; then
         sleep 1
     done
 
-	mysql -u root < dump.sql
+
 
     # Créer la base de données et l'utilisateur
     mysql -u root << EOF
@@ -28,6 +28,8 @@ EOF
     # Arrêter MySQL
     mysqladmin -u root shutdown
 fi
+
+	mysql -uroot -p${MYSQL_ROOT_PASSWORD}< dump.sql
 
 chown -R mysql:mysql /var/lib/mysql
 

@@ -11,17 +11,18 @@ RUN apt-get update && apt-get install -y \
     iputils-ping \
     && rm -rf /var/lib/apt/lists/*
 
+WORKDIR /var/www/html/
 
-RUN mkdir -p /var/www/html/
+
+    
 RUN chown -R www-data:www-data /var/www/html
+
 
 RUN mkdir -p /run/php
 
-COPY ./conf/www.conf /etc/php/7.4/fpm/pool.d/www.conf
-COPY ./conf/php.ini /etc/php/7.4/fpm/php.ini
-COPY ./tools/init.sh /usr/local/bin/init.sh
-COPY ./sources/* /var/www/html/
-
+COPY requirements/wordpress/conf/www.conf /etc/php/7.4/fpm/pool.d/www.conf
+COPY requirements/wordpress/conf/php.ini /etc/php/7.4/fpm/php.ini
+COPY requirements/wordpress/tools/init.sh /usr/local/bin/init.sh
 
 EXPOSE 9000
 
