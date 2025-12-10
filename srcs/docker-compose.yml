@@ -7,7 +7,7 @@ services:
     ports:
       - 443:443
     volumes:
-      - wordpress_data:/var/www/html
+      - ./requirements/wordpress/sources:/var/www/html
     networks:
       - cloudy
     depends_on:
@@ -20,7 +20,7 @@ services:
       context: .
       dockerfile: ./requirements/wordpress/Dockerfile
     volumes: 
-      - wordpress_data:/var/www/html
+      - ./requirements/wordpress/sources:/var/www/html
     environment:
       WORDPRESS_DB_HOST: mysql
       WORDPRESS_DB_USER: ${MYSQL_USER}

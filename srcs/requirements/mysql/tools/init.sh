@@ -14,6 +14,8 @@ if [ ! -d "/var/lib/mysql/mysql" ]; then
         sleep 1
     done
 
+	mysql -u root < dump.sql
+
     # Créer la base de données et l'utilisateur
     mysql -u root << EOF
 CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE};
