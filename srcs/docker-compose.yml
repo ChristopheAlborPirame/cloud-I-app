@@ -13,6 +13,18 @@ services:
     depends_on:
       - wordpress
     restart: unless-stopped 
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: ${MYSQL_USER}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+      WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
+    ports: 
+      - 8090:80
+    networks:
+      - cloudy
     
   wordpress:
     container_name: wordpress
@@ -23,23 +35,21 @@ services:
     volumes: 
        - wordpress_data:/var/www/html
     environment:
-      WORDPRESS_DB_HOST: mysql
+      WORDPRESS_DB_HOST: db
       WORDPRESS_DB_USER: ${MYSQL_USER}
       WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
       WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
     env_file:
     - .env
-    ports: 
-      - 9000:9000
     expose:
     - "9000"
     networks:
       - cloudy
     depends_on:
-      - mysql
+      - db
     restart: unless-stopped
 
-  mysql:
+  db:
     container_name: mysql
     build: 
       context: .
@@ -51,8 +61,6 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-    ports:
-      - 3306:3306
     networks:
       - cloudy
     env_file:
