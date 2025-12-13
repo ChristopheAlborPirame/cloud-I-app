@@ -29,7 +29,9 @@ EOF
     mysqladmin -u root shutdown
 fi
 
-	mysql -uroot -p${MYSQL_ROOT_PASSWORD}< dump.sql
+echo "installing db..."
+mysql -uroot -p${MYSQL_ROOT_PASSWORD}< dump.sql
+echo "done..."
 
 chown -R mysql:mysql /var/lib/mysql
 
