@@ -25,7 +25,7 @@ re:
 	done
 	@rm IMAGES
 	@echo ${GREEN}Images deleted${RESET}
-	docker compose -f $(COMPOSE) up -d
+	docker compose -f $(COMPOSE) up -d --force-recreate
 
 clean:
 	@docker images -q > IMAGES
