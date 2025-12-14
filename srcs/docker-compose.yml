@@ -69,7 +69,7 @@ services:
     container_name: grafana
     build:
       context: .
-      dockerfile: ./requirements/bonus/grafana/Dockerfile
+      dockerfile: ./requirements/grafana/Dockerfile
       args:
         GRAFANA_USER_NAME: "${GRAFANA_USER_NAME}"
         GRAFANA_PWD: "${GRAFANA_PWD}"
