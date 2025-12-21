@@ -1,9 +1,6 @@
-FROM debian:11
-
-RUN apt-get update && apt-get install -y nginx openssl
+FROM nginx:latest
 
 RUN mkdir -p /etc/nginx/ssl
-
 
 COPY requirements/nginx/conf/default.conf /etc/nginx/conf.d/default.conf
 
@@ -17,7 +14,3 @@ RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
     && chmod 644 /etc/nginx/ssl/nginx.crt \
     && chmod 644 /etc/nginx/ssl/nginx.key
 
-
-EXPOSE 443
-
-CMD ["nginx"]
