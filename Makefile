@@ -18,14 +18,9 @@ downv:
 
 
 re:
-	docker compose -f $(COMPOSE) down
-	@docker images -q > IMAGES
-	@cat IMAGES | while IFS= read -r line; do \
-		docker rmi "$$line"; \
-	done
-	@rm IMAGES
+	docker compose -f $(COMPOSE) down --rmi all --remove-orphans
 	@echo ${GREEN}Images deleted${RESET}
-	docker compose -f $(COMPOSE) up -d --force-recreate
+	docker compose -f $(COMPOSE) up -d
 
 clean:
 	@docker images -q > IMAGES
