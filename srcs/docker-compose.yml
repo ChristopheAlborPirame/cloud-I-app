@@ -26,7 +26,7 @@ services:
     
   wordpress:
     container_name: wordpress
-    image: chrisap75/cloudi:v2
+    image: wordpress:php8.2-fpm
     # build: 
     #   context: .
     #   dockerfile: ./requirements/wordpress/Dockerfile
