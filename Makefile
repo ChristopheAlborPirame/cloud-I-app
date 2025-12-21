@@ -30,6 +30,8 @@ logs:
 	docker compose -f $(COMPOSE) logs mysql
 	docker compose -f $(COMPOSE) logs nginx
 
-reset: downv clean
+reset:
+	docker compose -f $(COMPOSE) down -v
+	docker compose -f $(COMPOSE) down --rmi all --remove-orphans
 
 .PHONY: reset
