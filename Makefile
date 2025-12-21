@@ -27,7 +27,7 @@ clean:
 
 logs:
 	docker compose -f $(COMPOSE) logs wordpress
-	docker compose -f $(COMPOSE) logs mariadb
+	docker compose -f $(COMPOSE) logs mysql
 	docker compose -f $(COMPOSE) logs nginx
 
 reset: downv clean
