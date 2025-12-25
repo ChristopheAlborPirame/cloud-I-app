@@ -26,7 +26,9 @@ services:
     
   wordpress:
     container_name: wordpress
-    image: wordpress:php8.2-fpm
+    build: 
+      context: .
+      dockerfile: ./requirements/wordpress/Dockerfile
     volumes: 
        - wordpress_data:/var/www/html
     environment:

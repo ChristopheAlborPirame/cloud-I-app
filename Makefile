@@ -11,7 +11,8 @@ down:
 downv:
 	docker compose -f $(COMPOSE) down -v
 
-
+save:
+	./srcs/requirements/wordpress/tools/save.sh
 
 re:
 	docker compose -f $(COMPOSE) down --rmi all --remove-orphans

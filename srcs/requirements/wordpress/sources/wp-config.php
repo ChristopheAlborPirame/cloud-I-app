@@ -13,29 +13,56 @@
  * * Database table prefix
  * * ABSPATH
  *
+ * This has been slightly modified (to read environment variables) for use in Docker.
+ *
  * @link https://developer.wordpress.org/advanced-administration/wordpress/wp-config/
  *
  * @package WordPress
  */
 
+// IMPORTANT: this file needs to stay in-sync with https://github.com/WordPress/WordPress/blob/master/wp-config-sample.php
+// (it gets parsed by the upstream wizard in https://github.com/WordPress/WordPress/blob/f27cb65e1ef25d11b535695a660e7282b98eb742/wp-admin/setup-config.php#L356-L392)
+
+// a helper function to lookup "env_FILE", "env", then fallback
+if (!function_exists('getenv_docker')) {
+	// https://github.com/docker-library/wordpress/issues/588 (WP-CLI will load this file 2x)
+	function getenv_docker($env, $default) {
+		if ($fileEnv = getenv($env . '_FILE')) {
+			return rtrim(file_get_contents($fileEnv), "\r\n");
+		}
+		else if (($val = getenv($env)) !== false) {
+			return $val;
+		}
+		else {
+			return $default;
+		}
+	}
+}
+
 // ** Database settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define( 'DB_NAME', 'wp_db' );
+define( 'DB_NAME', getenv_docker('WORDPRESS_DB_NAME', 'wordpress') );
 
 /** Database username */
-define( 'DB_USER', 'wp' );
+define( 'DB_USER', getenv_docker('WORDPRESS_DB_USER', 'example username') );
 
 /** Database password */
-define( 'DB_PASSWORD', 'sdfsgdfhgkdfhsdkfjlghdfklgshdfjkgsdfhglfjhndybkbfygkvdsj' );
+define( 'DB_PASSWORD', getenv_docker('WORDPRESS_DB_PASSWORD', 'example password') );
+
+/**
+ * Docker image fallback values above are sourced from the official WordPress installation wizard:
+ * https://github.com/WordPress/WordPress/blob/1356f6537220ffdc32b9dad2a6cdbe2d010b7a88/wp-admin/setup-config.php#L224-L238
+ * (However, using "example username" and "example password" in your database is strongly discouraged.  Please use strong, random credentials!)
+ */
 
 /** Database hostname */
-define( 'DB_HOST', 'mysql' );
+define( 'DB_HOST', getenv_docker('WORDPRESS_DB_HOST', 'mysql') );
 
 /** Database charset to use in creating database tables. */
-define( 'DB_CHARSET', 'utf8mb4' );
+define( 'DB_CHARSET', getenv_docker('WORDPRESS_DB_CHARSET', 'utf8mb4') );
 
 /** The database collate type. Don't change this if in doubt. */
-define( 'DB_COLLATE', '' );
+define( 'DB_COLLATE', getenv_docker('WORDPRESS_DB_COLLATE', '') );
 
 /**#@+
  * Authentication unique keys and salts.
@@ -48,14 +75,15 @@ define( 'DB_COLLATE', '' );
  *
  * @since 2.6.0
  */
-define( 'AUTH_KEY',         'euRs|E3v*(C=E8n-@p;3cM%}NnE2pFALLVXe5aH<f%Xo|2.N0n^qA;zGhB=]?ILs' );
-define( 'SECURE_AUTH_KEY',  ')c!hb34t:F`0n06rw;D/QEmaDoIJ0d;^7ceVpRnJ(eOqr=+CAxe^A ]b]^ w3IG[' );
-define( 'LOGGED_IN_KEY',    '@mQ|eAOKj/#{JVyEvC7K1)W380Ec:#;f@P!AND-DBTPkVEIBy@s_iE<QWwWSWFC9' );
-define( 'NONCE_KEY',        'YP_2$iaYr##EO<cfW)Qo:i,~%(4n;p{r8tz$?S<3%D=qXF3Y6UveCp;*M}r<suzv' );
-define( 'AUTH_SALT',        '@+egQpQzIdoS=Y#Xsfii!;G=fR$$#C[/WU5b?=V?Mued:`lTEXgMk4k|1>wMra8m' );
-define( 'SECURE_AUTH_SALT', 'U }tuU>32nSK|XAWbU=+OkbK~U%E]hw0C1`[ruJk <U7[_+ceV<y=;CmW-{zquv.' );
-define( 'LOGGED_IN_SALT',   'QJSRSfY[l5e/Ww83?jl{,gdz@vUB.};5OG$kT;n&e`frgVL?B@UT>L!5zx-~TT7+' );
-define( 'NONCE_SALT',       'JN!S8Rka$1TExZ*)MkaZ}E.=]uWoW5aE=f@W*5b}0oaec.]8?dS9UCJ$t( .AP{U' );
+define( 'AUTH_KEY',         getenv_docker('WORDPRESS_AUTH_KEY',         '8660b1ee44f5a61909dac71878b5a0039250297a') );
+define( 'SECURE_AUTH_KEY',  getenv_docker('WORDPRESS_SECURE_AUTH_KEY',  'ca6f5a1229980dfcbd446d0faa090415cce7f5ed') );
+define( 'LOGGED_IN_KEY',    getenv_docker('WORDPRESS_LOGGED_IN_KEY',    'beccbe81f878f031779509c934073afae8197a24') );
+define( 'NONCE_KEY',        getenv_docker('WORDPRESS_NONCE_KEY',        'c5e2e5b79920e4fec84f90205254358e8112a519') );
+define( 'AUTH_SALT',        getenv_docker('WORDPRESS_AUTH_SALT',        '58a6963951d3b54253e86ad6d0f2baa4a3c155f8') );
+define( 'SECURE_AUTH_SALT', getenv_docker('WORDPRESS_SECURE_AUTH_SALT', 'a2d4dd240616c736e589e905627ed343155b5a15') );
+define( 'LOGGED_IN_SALT',   getenv_docker('WORDPRESS_LOGGED_IN_SALT',   '94930debb438dbcaf9df2afb0528bc2a3682e403') );
+define( 'NONCE_SALT',       getenv_docker('WORDPRESS_NONCE_SALT',       'b77f5dfc3af3b377aa8f83a25128a965af852835') );
+// (See also https://wordpress.stackexchange.com/a/152905/199287)
 
 /**#@-*/
 
@@ -71,7 +99,7 @@ define( 'NONCE_SALT',       'JN!S8Rka$1TExZ*)MkaZ}E.=]uWoW5aE=f@W*5b}0oaec.]8?dS
  *
  * @link https://developer.wordpress.org/advanced-administration/wordpress/wp-config/#table-prefix
  */
-$table_prefix = 'wp_';
+$table_prefix = getenv_docker('WORDPRESS_TABLE_PREFIX', 'wp_');
 
 /**
  * For developers: WordPress debugging mode.
@@ -85,11 +113,20 @@ $table_prefix = 'wp_';
  *
  * @link https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/
  */
-define( 'WP_DEBUG', false );
+define( 'WP_DEBUG', !!getenv_docker('WORDPRESS_DEBUG', '') );
 
 /* Add any custom values between this line and the "stop editing" line. */
 
+// If we're behind a proxy server and using HTTPS, we need to alert WordPress of that fact
+// see also https://wordpress.org/support/article/administration-over-ssl/#using-a-reverse-proxy
+if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && strpos($_SERVER['HTTP_X_FORWARDED_PROTO'], 'https') !== false) {
+	$_SERVER['HTTPS'] = 'on';
+}
+// (we include this by default because reverse proxying is extremely common in container environments)
 
+if ($configExtra = getenv_docker('WORDPRESS_CONFIG_EXTRA', '')) {
+	eval($configExtra);
+}
 
 /* That's all, stop editing! Happy publishing. */
 
