@@ -54,6 +54,7 @@ services:
       dockerfile: ./requirements/mysql/Dockerfile
     volumes:
       - mysql_data:/var/lib/mysql
+      - /tmp/dump.sql:/docker-entrypoint-initdb.d/dump.sql:ro
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_USER: ${MYSQL_USER}
