@@ -2,7 +2,7 @@
 
 
 set -a  # Exporte automatiquement les variables
-source ../../../.env
+source srcs/.env
 set +a
 
 docker exec mysql mysqldump --all-databases --triggers --routines --events --single-transaction -uroot -p${MYSQL_ROOT_PASSWORD} > dump.sql
