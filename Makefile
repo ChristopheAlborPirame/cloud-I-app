@@ -13,7 +13,7 @@ downv:
 
 save:
 	./srcs/requirements/wordpress/tools/save.sh
-	./srcs/requirements/mysql/dump/make-dump.sh
+	./srcs/requirements/mysql/tools/make-dump.sh
 
 re:
 	docker compose -f $(COMPOSE) down --rmi all --remove-orphans
